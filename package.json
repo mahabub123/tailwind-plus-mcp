@@ -7,12 +7,13 @@
     "test": "test"
   },
   "scripts": {
-    "start": "node src/cli.js serve",
+    "start": "next start --hostname 0.0.0.0",
     "test": "node --test",
     "demo": "node src/cli.js serve --root examples/assets",
     "dev": "next dev --hostname 127.0.0.1 --port 3001",
     "build": "next build",
-    "start:web": "next start --hostname 127.0.0.1 --port 3001"
+    "start:web": "npm start",
+    "start:stdio": "node src/cli.js serve"
   },
   "keywords": [],
   "author": "",

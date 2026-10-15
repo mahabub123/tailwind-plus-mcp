@@ -4,21 +4,19 @@ A runnable JavaScript/Node.js **stdio MCP server** for Claude Code and Codex. It
 
 **You supply the licensed assets.** Download or copy source through your own Tailwind Plus account as your license permits. This project contains only tiny original demo files, not Tailwind Plus components. The MIT license covers this connector, not your imported assets. Keep your library private; check your license and your AI provider's data handling before sending source through a client.
 
-## Next.js without Docker
+## Next.js hosting
 
-Run `npm ci`, `npm run build`, then `npm run start:web` to serve the Next.js app on
-127.0.0.1:3001. Configure `TAILWIND_PLUS_ROOT`, `MCP_TOKEN`, and `MCP_PUBLIC_URL`
-in the process environment. See [DEPLOY.md](DEPLOY.md#nextjs-without-docker) for HTTPS
-and VPS deployment. The `/mcp` endpoint requires bearer authentication.
-
-## Remote hosting
-
-For an authenticated HTTPS endpoint, use the new `serve-http` command and follow
-[the remote deployment guide](DEPLOY.md). The default `serve` command remains local stdio.
+Run `npm ci`, `npm run build`, then `npm start`. The production server listens on
+0.0.0.0 and uses `PORT` from the process environment (default 3000). Configure
+`TAILWIND_PLUS_ROOT`, `MCP_TOKEN`, and `MCP_PUBLIC_URL` on your server.
+See [DEPLOY.md](DEPLOY.md) for Node.js deployment with HTTPS.
+Use `/` for platform health checks; `/mcp` requires bearer authentication.
+`npm run start:web` is an alias for `npm start`. Local stdio remains available
+through `npm run start:stdio` or the CLI's `serve` command.
 
 ## Requirements and quick start
 
-Node.js 22 or newer, npm, and internet access for the initial dependency install. No API key or Tailwind credentials required. No build step.
+Node.js 22 or newer, npm, and internet access for the initial dependency install. No Tailwind credentials required. The local stdio CLI needs no build step; Next.js hosting requires `npm run build`.
 
 ```sh
 cd tailwind-plus-mcp
