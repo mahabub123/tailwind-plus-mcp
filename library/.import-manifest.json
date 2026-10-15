@@ -1,0 +1,170 @@
+{
+  "archives": 17,
+  "files": 3623,
+  "templates": [
+    {
+      "name": "catalyst-demo-javascript",
+      "files": 54
+    },
+    {
+      "name": "catalyst-demo-typescript",
+      "files": 55
+    },
+    {
+      "name": "commit",
+      "files": 63
+    },
+    {
+      "name": "compass",
+      "files": 148
+    },
+    {
+      "name": "keynote",
+      "files": 55
+    },
+    {
+      "name": "oatmeal-olive-instrument",
+      "files": 362
+    },
+    {
+      "name": "pocket",
+      "files": 79
+    },
+    {
+      "name": "primer",
+      "files": 67
+    },
+    {
+      "name": "protocol",
+      "files": 164
+    },
+    {
+      "name": "radiant",
+      "files": 107
+    },
+    {
+      "name": "salient",
+      "files": 61
+    },
+    {
+      "name": "spotlight",
+      "files": 81
+    },
+    {
+      "name": "studio",
+      "files": 107
+    },
+    {
+      "name": "syntax",
+      "files": 128
+    },
+    {
+      "name": "transmit",
+      "files": 65
+    }
+  ],
+  "imports": [
+    {
+      "name": "catalyst-ui-kit",
+      "files": 165,
+      "components": 56,
+      "templates": 109
+    },
+    {
+      "name": "keynote",
+      "files": 55,
+      "components": 0,
+      "templates": 55
+    },
+    {
+      "name": "syntax",
+      "files": 128,
+      "components": 0,
+      "templates": 128
+    },
+    {
+      "name": "pocket",
+      "files": 79,
+      "components": 0,
+      "templates": 79
+    },
+    {
+      "name": "transmit",
+      "files": 65,
+      "components": 0,
+      "templates": 65
+    },
+    {
+      "name": "commit",
+      "files": 63,
+      "components": 0,
+      "templates": 63
+    },
+    {
+      "name": "protocol",
+      "files": 164,
+      "components": 0,
+      "templates": 164
+    },
+    {
+      "name": "primer",
+      "files": 67,
+      "components": 0,
+      "templates": 67
+    },
+    {
+      "name": "studio",
+      "files": 107,
+      "components": 0,
+      "templates": 107
+    },
+    {
+      "name": "salient",
+      "files": 61,
+      "components": 0,
+      "templates": 61
+    },
+    {
+      "name": "compass",
+      "files": 148,
+      "components": 0,
+      "templates": 148
+    },
+    {
+      "name": "radiant",
+      "files": 107,
+      "components": 0,
+      "templates": 107
+    },
+    {
+      "name": "spotlight",
+      "files": 81,
+      "components": 0,
+      "templates": 81
+    },
+    {
+      "name": "oatmeal-olive-instrument",
+      "files": 362,
+      "components": 0,
+      "templates": 362
+    },
+    {
+      "name": "ecommerce-v4",
+      "files": 342,
+      "components": 342,
+      "templates": 0
+    },
+    {
+      "name": "application-ui-v4",
+      "files": 1092,
+      "components": 1092,
+      "templates": 0
+    },
+    {
+      "name": "marketing-v4",
+      "files": 537,
+      "components": 537,
+      "templates": 0
+    }
+  ]
+}

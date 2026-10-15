@@ -1,0 +1,36 @@
+{
+  "name": "tailwind-plus-transmit",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint"
+  },
+  "browserslist": "defaults, not ie <= 11",
+  "dependencies": {
+    "@tailwindcss/postcss": "^4.3.3",
+    "@tailwindcss/typography": "^0.5.16",
+    "clsx": "^2.1.1",
+    "fast-xml-parser": "^5.5.10",
+    "next": "16.2.6",
+    "react": "19.2.6",
+    "react-aria": "^3.42.0",
+    "react-dom": "19.2.6",
+    "react-stately": "^3.40.0",
+    "tailwindcss": "^4.3.3",
+    "valibot": "^1.1.0"
+  },
+  "devDependencies": {
+    "eslint": "^9.32.0",
+    "eslint-config-next": "16.2.6",
+    "prettier": "^3.8.3",
+    "prettier-plugin-tailwindcss": "^0.8.1",
+    "sharp": "0.34.3"
+  },
+  "overrides": {
+    "@types/react": "19.2.14",
+    "@types/react-dom": "19.2.3"
+  }
+}
