@@ -29,7 +29,9 @@ export async function handleMcp(request) {
     // JSON-only transport: consume the completed response before closing the server.
     const body = await response.arrayBuffer();
     return new Response(body.byteLength ? body : null, { status: response.status, headers: response.headers });
-  } catch {
+  } catch (error) {
+    // Log the cause on the server without exposing credentials or source to clients.
+    console.error('[mcp] Request failed:', String(error.message).replaceAll(token, '[REDACTED]'));
     return reply(500, 'Internal server error');
   } finally {
     await server?.close().catch(() => {});

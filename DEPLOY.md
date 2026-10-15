@@ -136,3 +136,13 @@ Expected inventory: 3,623 indexed files, 2,027 component files, 1,596 template
 files, and 15 template entries (including two Catalyst demos). Test through an
 authenticated MCP client by listing templates and searching components. Keep
 access restricted according to your Tailwind Plus license.
+
+## Diagnose a connector connection failure
+
+Run `npm run diagnose` in the application directory, using the same user and
+runtime environment as the running service. It reads `.env` and `.env.local`
+(process environment takes priority), validates the library, and tests public
+MCP initialization, tool discovery, and a component search. It never prints the
+token. A successful shell check does not prove the service uses the same environment
+or filesystem permissions; run it in the service runtime when using a hosting panel.
+Application logs now include the underlying error for MCP requests returning 500.
