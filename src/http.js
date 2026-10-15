@@ -1,7 +1,7 @@
 import { createServer as createHttpServer } from 'node:http';
 import { timingSafeEqual } from 'node:crypto';
 import { StreamableHTTPServerTransport } from '@modelcontextprotocol/sdk/server/streamableHttp.js';
-import { Library } from './library.js';
+import { libraryRoot, openLibrary } from './library-config.js';
 import { createServer } from './server.js';
 
 export async function startHttp(root, options = {}) {
@@ -12,7 +12,7 @@ export async function startHttp(root, options = {}) {
   if (!token || token.length < 32) throw Error('MCP_TOKEN must contain at least 32 characters');
   if (!Number.isInteger(port) || port < 0 || port > 65535) throw Error('Invalid PORT');
   if (!['http:', 'https:'].includes(publicUrl.protocol)) throw Error('Invalid MCP_PUBLIC_URL');
-  const library = await Library.open(root);
+  const library = await openLibrary(libraryRoot(root));
   const expected = Buffer.from(`Bearer ${token}`);
   const http = createHttpServer(async (req, res) => {
     const reply = (status, message) => { res.writeHead(status, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ error: message })); };

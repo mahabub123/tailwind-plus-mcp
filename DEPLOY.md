@@ -8,13 +8,13 @@ is Next.js, with a home page at `/` and a Streamable HTTP MCP endpoint at `/mcp`
 1. Push the application source to GitHub, keeping credentials and licensed assets
    outside the repository. Clone it onto the VPS, for example at
    `/opt/tailwind-plus-mcp`.
-2. Upload your private asset library to `/opt/tailwind-library`. The user running
+2. Upload your private asset library to `/opt/tailwind-plus-mcp/library`. The user running
    Node.js must be able to read its files and traverse its directories.
 3. In the project directory on the VPS, create a private `.env.local`:
 
    ```sh
    umask 077
-   printf 'MCP_TOKEN=%s\nMCP_PUBLIC_URL=https://mcp.example.com\nTAILWIND_PLUS_ROOT=/opt/tailwind-library\n' "$(openssl rand -hex 32)" > .env.local
+   printf 'MCP_TOKEN=%s\nMCP_PUBLIC_URL=https://mcp.example.com\n' "$(openssl rand -hex 32)" > .env.local
    ```
 
    Replace the example domain with your actual domain. Next.js reads this file.
@@ -107,7 +107,7 @@ After source updates, run `git pull`, `npm ci`, `npm run build`, then
 rotation as well.
 
 For local development use `npm run dev` on 127.0.0.1:3001, set MCP_PUBLIC_URL to
-http://localhost:3001 and set TAILWIND_PLUS_ROOT to your local asset directory.
+http://localhost:3001 and import your assets into the project library/ folder.
 The CLI's `serve` command still supports local stdio, and `serve-http` provides
 the standalone Node.js HTTP server if needed.
 
@@ -122,14 +122,15 @@ Upload that bundle privately with SFTP to your VPS. Extract it as the service us
 into a new private directory, for example:
 
 ```sh
-mkdir -p /opt/tailwind-library
-chmod 700 /opt/tailwind-library
-tar -xzf /path/to/uploaded-library.tar.gz -C /opt/tailwind-library
+mkdir -p /opt/tailwind-plus-mcp/library
+chmod 700 /opt/tailwind-plus-mcp/library
+tar -xzf /path/to/uploaded-library.tar.gz -C /opt/tailwind-plus-mcp/library
 ```
 
 Ensure the service user owns the destination and can read the extracted files.
-Set `TAILWIND_PLUS_ROOT=/opt/tailwind-library` in the VPS environment, then restart
-the application. Do not use the local Mac path on the VPS. If the provider rebuilds
+Restart the application after extraction. No root environment variable is needed.
+Remove any old `TAILWIND_PLUS_ROOT` value in the hosting panel so it does not
+override automatic discovery. Do not use the local Mac path on the VPS. If the provider rebuilds
 its runtime on deployment, use a persistent directory for this library.
 
 Expected inventory: 3,623 indexed files, 2,027 component files, 1,596 template
@@ -146,3 +147,16 @@ MCP initialization, tool discovery, and a component search. It never prints the
 token. A successful shell check does not prove the service uses the same environment
 or filesystem permissions; run it in the service runtime when using a hosting panel.
 Application logs now include the underlying error for MCP requests returning 500.
+
+## Automatic library setup
+
+The service discovers `library/` inside its working directory. No root environment
+variable is required. An existing `TAILWIND_PLUS_ROOT` remains an optional override;
+remove it from the hosting panel to use automatic discovery. The service never
+falls back to demo assets. If the library is absent, unreadable, or empty, MCP
+returns 503 with an installation message and logs the local cause.
+
+Extract `.deploy-library.tar.gz` into the application's `library/` folder. In a
+managed runtime, this folder must be present inside that runtime, using persistent
+storage if needed. GitHub deployment alone cannot transfer the licensed assets
+because `library/` is intentionally excluded from Git.

@@ -1,4 +1,4 @@
-import { Library } from '../src/library.js';
+import { libraryRoot, openLibrary } from '../src/library-config.js';
 import { Client } from '@modelcontextprotocol/sdk/client/index.js';
 import { StreamableHTTPClientTransport } from '@modelcontextprotocol/sdk/client/streamableHttp.js';
 
@@ -7,10 +7,9 @@ const redact = value => token ? String(value).replaceAll(token, '[REDACTED]') : 
 let client;
 try {
   if (!token || token.length < 32) throw Error('MCP_TOKEN is missing or shorter than 32 characters');
-  if (!process.env.TAILWIND_PLUS_ROOT) throw Error('TAILWIND_PLUS_ROOT is missing');
   if (!process.env.MCP_PUBLIC_URL) throw Error('MCP_PUBLIC_URL is missing');
   console.log('Environment: required variables present (token hidden)');
-  const library = await Library.open(process.env.TAILWIND_PLUS_ROOT);
+  const library = await openLibrary(libraryRoot());
   console.log(`Library: ${library.entries.length} files, ${library.templates().length} templates`);
   if (!library.entries.length) throw Error('Library contains no supported source files');
   const url = new URL('/mcp', process.env.MCP_PUBLIC_URL);

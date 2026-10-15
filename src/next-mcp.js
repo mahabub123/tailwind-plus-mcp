@@ -1,15 +1,16 @@
 import { timingSafeEqual } from 'node:crypto';
 import { WebStandardStreamableHTTPServerTransport } from '@modelcontextprotocol/sdk/server/webStandardStreamableHttp.js';
-import { Library } from './library.js';
+import { libraryRoot, openLibrary } from './library-config.js';
 import { createServer } from './server.js';
 
 let libraryPromise;
+let cachedRoot;
 export async function handleMcp(request) {
   const token = process.env.MCP_TOKEN;
-  const root = process.env.TAILWIND_PLUS_ROOT;
+  const root = libraryRoot();
   const publicUrl = process.env.MCP_PUBLIC_URL;
   const reply = (status, error, headers = {}) => Response.json({ error }, { status, headers });
-  if (!token || token.length < 32 || !root || !publicUrl) return reply(503, 'Server configuration incomplete');
+  if (!token || token.length < 32 || !publicUrl) return reply(503, 'Server configuration incomplete');
   let expectedUrl;
   try { expectedUrl = new URL(publicUrl); } catch { return reply(503, 'Invalid server URL'); }
   if (request.headers.get('host') !== expectedUrl.host) return reply(403, 'Invalid host');
@@ -21,7 +22,8 @@ export async function handleMcp(request) {
   if (request.method !== 'POST') return reply(405, 'Method not allowed', { Allow: 'POST' });
   let server;
   try {
-    libraryPromise ??= Library.open(root).catch(error => { libraryPromise = undefined; throw error; });
+    if (cachedRoot !== root) { libraryPromise = undefined; cachedRoot = root; }
+    libraryPromise ??= openLibrary(root).catch(error => { libraryPromise = undefined; throw error; });
     server = createServer(await libraryPromise);
     const transport = new WebStandardStreamableHTTPServerTransport({ sessionIdGenerator: undefined, enableJsonResponse: true });
     await server.connect(transport);
@@ -32,6 +34,7 @@ export async function handleMcp(request) {
   } catch (error) {
     // Log the cause on the server without exposing credentials or source to clients.
     console.error('[mcp] Request failed:', String(error.message).replaceAll(token, '[REDACTED]'));
+    if (error.code === 'LIBRARY_NOT_READY') return reply(503, 'Library not installed. Import assets into the project library folder.');
     return reply(500, 'Internal server error');
   } finally {
     await server?.close().catch(() => {});

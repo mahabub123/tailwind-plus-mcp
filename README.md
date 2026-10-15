@@ -8,7 +8,9 @@ A runnable JavaScript/Node.js **stdio MCP server** for Claude Code and Codex. It
 
 Run `npm ci`, `npm run build`, then `npm start`. The production server listens on
 0.0.0.0 and uses `PORT` from the process environment (default 3000). Configure
-`TAILWIND_PLUS_ROOT`, `MCP_TOKEN`, and `MCP_PUBLIC_URL` on your server.
+`MCP_TOKEN` and `MCP_PUBLIC_URL` on your server. The library is discovered
+automatically in `library/` relative to the application working directory;
+`TAILWIND_PLUS_ROOT` is only an optional override.
 See [DEPLOY.md](DEPLOY.md) for Node.js deployment with HTTPS.
 Use `/` for platform health checks; `/mcp` requires bearer authentication.
 `npm run start:web` is an alias for `npm start`. Local stdio remains available
@@ -162,8 +164,8 @@ to import the 17 named archives. The destination must not exist. The importer
 organizes components and templates, preserves JavaScript/TypeScript variants,
 and retains complete ZIP downloads under the private `.archives` folder.
 Only supported source files are indexed; images/fonts remain in the archives.
-The manifest is stored in `.import-manifest.json`. Point `TAILWIND_PLUS_ROOT` to
-the resulting library and restart the service after importing.
+The manifest is stored in `.import-manifest.json`. Import into the project `library/` folder and restart the service. A custom
+destination can optionally be selected with `TAILWIND_PLUS_ROOT`.
 
 The project's `library/` folder is excluded from Git. Transfer it to your VPS
 privately rather than committing licensed source to GitHub.
