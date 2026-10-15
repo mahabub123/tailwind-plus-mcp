@@ -14,7 +14,7 @@ is Next.js, with a home page at `/` and a Streamable HTTP MCP endpoint at `/mcp`
 
    ```sh
    umask 077
-   printf 'MCP_TOKEN=%s\nMCP_PUBLIC_URL=https://mcp.example.com\n' "$(openssl rand -hex 32)" > .env.local
+   printf 'MCP_PUBLIC_URL=https://mcp.example.com\n' > .env.local
    ```
 
    Replace the example domain with your actual domain. Next.js reads this file.
@@ -87,9 +87,9 @@ For a hosting panel using a native Node.js runtime, configure:
 - Internal port: `3000` (or the panel's PORT environment variable)
 - Health-check path: `/`
 
-The home page returns 200. `/mcp` returns 401 without a bearer token and 405 for
-an authenticated GET; MCP requests use POST. A process health check on `/` does
-not verify library configuration or authenticated tool access.
+The home page returns 200. `/mcp` returns 405 for GET; MCP requests use POST.
+No authentication is required. A health check on `/` does not verify library
+configuration or MCP tool access.
 
 Some panels provision their own isolated runtime. Removing deployment files from
 this repository does not change the hosting provider's runtime or deployment mode.
@@ -97,14 +97,13 @@ Choose a native Node.js deployment mode or run the systemd service on your VPS.
 
 ## Client connection and updates
 
-Use `https://mcp.example.com/mcp` with the header
-`Authorization: Bearer YOUR_MCP_TOKEN`. Every authorized client can read the whole
-configured library. OAuth discovery/login is not implemented; Claude cloud custom
-connector authentication compatibility has not been verified.
+Use `https://mcp.example.com/mcp` without credentials. In Claude, select
+**No sign-in**, leave OAuth settings empty, and remove all Authorization headers.
+Anyone who can reach the endpoint can search and read the configured library.
+`MCP_TOKEN` is no longer used and can be removed from the hosting environment.
 
 After source updates, run `git pull`, `npm ci`, `npm run build`, then
-`sudo systemctl restart tailwind-plus-mcp`. Restart after asset changes or token
-rotation as well.
+`sudo systemctl restart tailwind-plus-mcp`. Restart after asset changes as well.
 
 For local development use `npm run dev` on 127.0.0.1:3001, set MCP_PUBLIC_URL to
 http://localhost:3001 and import your assets into the project library/ folder.
@@ -135,16 +134,15 @@ its runtime on deployment, use a persistent directory for this library.
 
 Expected inventory: 3,623 indexed files, 2,027 component files, 1,596 template
 files, and 15 template entries (including two Catalyst demos). Test through an
-authenticated MCP client by listing templates and searching components. Keep
+anonymous MCP client by listing templates and searching components. Keep
 access restricted according to your Tailwind Plus license.
 
 ## Diagnose a connector connection failure
 
 Run `npm run diagnose` in the application directory, using the same user and
 runtime environment as the running service. It reads `.env` and `.env.local`
-(process environment takes priority), validates the library, and tests public
-MCP initialization, tool discovery, and a component search. It never prints the
-token. A successful shell check does not prove the service uses the same environment
+(process environment takes priority), validates the library, and tests anonymous public
+MCP initialization, tool discovery, and a component search. A successful shell check does not prove the service uses the same environment
 or filesystem permissions; run it in the service runtime when using a hosting panel.
 Application logs now include the underlying error for MCP requests returning 500.
 

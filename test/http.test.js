@@ -4,29 +4,26 @@ import { startHttp } from '../src/http.js';
 import { Client } from '@modelcontextprotocol/sdk/client/index.js';
 import { StreamableHTTPClientTransport } from '@modelcontextprotocol/sdk/client/streamableHttp.js';
 
-test('remote MCP authenticates requests and serves tools', async () => {
-  const token = 'a'.repeat(40);
-  // Use localhost as the public hostname to verify host validation.
-  const server = await startHttp('examples/assets', { port: 31009, token, publicUrl: 'http://localhost:31009' });
-  const url = new URL(`http://localhost:${server.address().port}/mcp`);
-  const headers = { Host: 'localhost:31009' };
+test('remote MCP serves anonymous clients while validating host and origin', async () => {
+  delete process.env.MCP_TOKEN;
+  const server = await startHttp('examples/assets', { port: 31009, publicUrl: 'http://localhost:31009' });
+  const url = new URL('http://localhost:31009/mcp');
   const client = new Client({ name: 'test', version: '1' });
   try {
-    assert.equal((await fetch(url, { headers })).status, 401);
-    assert.equal((await fetch(url, { headers: { ...headers, Authorization: `Bearer ${token}`, Origin: 'https://evil.example' } })).status, 403);
-    assert.equal((await fetch(new URL(`http://127.0.0.1:${server.address().port}/mcp`), { headers: { Authorization: `Bearer ${token}` } })).status, 403);
-    assert.equal((await fetch(url, { headers: { ...headers, Authorization: `Bearer ${token}` } })).status, 405);
-    await client.connect(new StreamableHTTPClientTransport(url, { requestInit: { headers: { ...headers, Authorization: `Bearer ${token}` } } }));
+    assert.equal((await fetch(url)).status, 405);
+    assert.equal((await fetch(url, {headers:{Origin:'https://evil.example'}})).status, 403);
+    assert.equal((await fetch('http://127.0.0.1:31009/mcp')).status, 403);
+    await client.connect(new StreamableHTTPClientTransport(url));
     assert.equal((await client.listTools()).tools.length, 7);
     const result = await client.callTool({ name: 'search_components', arguments: {} });
-    assert.ok(result.content.length);
+    assert.ok(!result.isError);
+    const found=JSON.parse(result.content[0].text).results[0];
+    const read=await client.callTool({name:'get_component',arguments:{id:found.id,lineCount:5}});
+    assert.ok(!read.isError);
+    assert.ok(JSON.parse(read.content[0].text).source);
   } finally {
     await client.close();
     server.closeAllConnections();
     await new Promise(resolve => server.close(resolve));
   }
-});
-
-test('remote MCP refuses missing authentication', async () => {
-  await assert.rejects(startHttp('examples/assets', { token: '' }), /MCP_TOKEN/);
 });

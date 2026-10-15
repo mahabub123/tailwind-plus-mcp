@@ -12,6 +12,6 @@ try {
       const server=await startHttp(root);
       console.error('HTTP MCP listening on '+JSON.stringify(server.address()));
     } else await start(root);
-  } else if(command==='--help' || !command) console.log('Usage:\n  node src/cli.js import <file|directory|zip> --to <new-directory>\n  node src/cli.js serve --root <library-directory>\n  node src/cli.js serve-http --root <library-directory> (requires MCP_TOKEN and MCP_PUBLIC_URL)\nDefaults to the project library/ folder. TAILWIND_PLUS_ROOT or --root optionally overrides it.');
+  } else if(command==='--help' || !command) console.log('Usage:\n  node src/cli.js import <file|directory|zip> --to <new-directory>\n  node src/cli.js serve --root <library-directory>\n  node src/cli.js serve-http --root <library-directory> (requires MCP_PUBLIC_URL)\nDefaults to the project library/ folder. TAILWIND_PLUS_ROOT or --root optionally overrides it.');
   else throw Error('Invalid arguments; run --help');
 } catch(e){console.error(`tailwind-plus-local: ${e.message}`);process.exitCode=1;}

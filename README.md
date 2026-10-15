@@ -8,11 +8,11 @@ A runnable JavaScript/Node.js **stdio MCP server** for Claude Code and Codex. It
 
 Run `npm ci`, `npm run build`, then `npm start`. The production server listens on
 0.0.0.0 and uses `PORT` from the process environment (default 3000). Configure
-`MCP_TOKEN` and `MCP_PUBLIC_URL` on your server. The library is discovered
+`MCP_PUBLIC_URL` on your server. The library is discovered
 automatically in `library/` relative to the application working directory;
 `TAILWIND_PLUS_ROOT` is only an optional override.
 See [DEPLOY.md](DEPLOY.md) for Node.js deployment with HTTPS.
-Use `/` for platform health checks; `/mcp` requires bearer authentication.
+Use `/` for platform health checks; `/mcp` allows anonymous read access.
 `npm run start:web` is an alias for `npm start`. Local stdio remains available
 through `npm run start:stdio` or the CLI's `serve` command.
 
@@ -130,7 +130,7 @@ Try asking:
 
 ## Safety and limits
 
-- MCP exposes seven read-only tools. Imports are an explicit local CLI operation, unavailable to the model. The default stdio mode has no network listener. Optional HTTP mode requires bearer authentication; see DEPLOY.md. There is no credential collection, telemetry, shell execution, or outbound request in application code.
+- MCP exposes seven read-only tools. Imports are an explicit local CLI operation, unavailable to the model. The default stdio mode has no network listener. HTTP mode permits public read access without authentication; see DEPLOY.md. There is no credential collection, telemetry, shell execution, or outbound request in application code.
 - Path input is never accepted by read tools: only indexed IDs. Traversal is rejected. Symlinks are skipped by scans and rejected on reads; ZIP links/special entries, encrypted archives, and unsafe entry paths are rejected. Assets are not executed or rendered.
 - Imports use a temporary directory, validate before copying into a new destination, and clean staging files on failure. Repeated imports require a new destination. Concurrent processes editing the same source/destination directories are unsupported; use private directories controlled by your user. This is not a sandbox against another local process that can mutate your filesystem during reads.
 - Per-file limit: 2 MiB; aggregate text limit: 100 MiB; at most 10,000 supported files, 30,000 walked directory entries or 10,000 ZIP entries. ZIP extraction enforces both declared and actual expanded byte limits. Very large downloads should be split into smaller libraries.
