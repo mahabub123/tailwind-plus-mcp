@@ -110,3 +110,29 @@ For local development use `npm run dev` on 127.0.0.1:3001, set MCP_PUBLIC_URL to
 http://localhost:3001 and set TAILWIND_PLUS_ROOT to your local asset directory.
 The CLI's `serve` command still supports local stdio, and `serve-http` provides
 the standalone Node.js HTTP server if needed.
+
+## Deploy the imported licensed library
+
+The supplied downloads have been indexed locally into `library/`, which is ignored
+by Git. `library/.archives/` preserves all 17 complete original ZIPs. The source-only
+transfer bundle is `library/.deploy-library.tar.gz`; it contains `components/` and
+`templates/`, without original archives, credentials, or binary media.
+
+Upload that bundle privately with SFTP to your VPS. Extract it as the service user
+into a new private directory, for example:
+
+```sh
+mkdir -p /opt/tailwind-library
+chmod 700 /opt/tailwind-library
+tar -xzf /path/to/uploaded-library.tar.gz -C /opt/tailwind-library
+```
+
+Ensure the service user owns the destination and can read the extracted files.
+Set `TAILWIND_PLUS_ROOT=/opt/tailwind-library` in the VPS environment, then restart
+the application. Do not use the local Mac path on the VPS. If the provider rebuilds
+its runtime on deployment, use a persistent directory for this library.
+
+Expected inventory: 3,623 indexed files, 2,027 component files, 1,596 template
+files, and 15 template entries (including two Catalyst demos). Test through an
+authenticated MCP client by listing templates and searching components. Keep
+access restricted according to your Tailwind Plus license.

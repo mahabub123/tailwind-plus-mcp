@@ -4,7 +4,7 @@ import crypto from 'node:crypto';
 export const MAX_FILE = 2 * 1024 * 1024;
 export const MAX_TOTAL = 100 * 1024 * 1024;
 export const MAX_FILES = 10000;
-const extensions = new Set(['.html','.jsx','.tsx','.js','.ts','.vue','.svelte','.css','.json','.md']);
+const extensions = new Set(['.html','.jsx','.tsx','.js','.ts','.vue','.svelte','.css','.json','.md','.mdx','.mjs','.cjs']);
 const ignored = new Set(['node_modules','.git','.next','dist','build','.cache']);
 export function allowed(name) {
   return !name.split(/[\\/]/).some(x => x.startsWith('.') || ignored.has(x)) &&

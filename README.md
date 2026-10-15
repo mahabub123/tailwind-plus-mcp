@@ -118,7 +118,7 @@ Environment alternative: omit `--root` and set `TAILWIND_PLUS_ROOT`. In Codex TO
 
 Search uses all query words across paths and source, with path matches ranked higher; it is a case-insensitive substring search, not semantic search. Category and format filters match exactly. Lists default to 20 results, maximum 50. Source reads default to 200 lines, maximum 500 and 64 KiB per response. Empty queries browse files. Pagination uses zero-based `offset`; source lines are one-based.
 
-Dependency scanning handles common static imports, `require`, and literal dynamic imports. It is a regex heuristic, may match comments or miss aliases, and does not infer CSS/HTML runtime requirements. Read returned package manifests for declared versions, scripts, and dependencies. No dependency installation or rendering/preview tool is exposed. The connector supports HTML, JSX, TSX, JS, TS, Vue, Svelte, CSS, JSON, and Markdown; it does not validate or transpile these languages.
+Dependency scanning handles common static imports, `require`, and literal dynamic imports. It is a regex heuristic, may match comments or miss aliases, and does not infer CSS/HTML runtime requirements. Read returned package manifests for declared versions, scripts, and dependencies. No dependency installation or rendering/preview tool is exposed. The connector supports HTML, JSX, TSX, JS, TS, Vue, Svelte, CSS, JSON, Markdown, MDX, MJS, and CJS; it does not validate or transpile these languages.
 
 Try asking:
 
@@ -154,3 +154,16 @@ Official references used for configuration and implementation:
 - [MCP SDK v1 documentation](https://ts.sdk.modelcontextprotocol.io/)
 
 This is an independent connector, not affiliated with or endorsed by Tailwind Labs, Anthropic, or OpenAI.
+
+## Import the supplied Tailwind Plus bundle
+
+Run `node scripts/import-tailwind-plus.js /path/to/downloads /path/to/new-library`
+to import the 17 named archives. The destination must not exist. The importer
+organizes components and templates, preserves JavaScript/TypeScript variants,
+and retains complete ZIP downloads under the private `.archives` folder.
+Only supported source files are indexed; images/fonts remain in the archives.
+The manifest is stored in `.import-manifest.json`. Point `TAILWIND_PLUS_ROOT` to
+the resulting library and restart the service after importing.
+
+The project's `library/` folder is excluded from Git. Transfer it to your VPS
+privately rather than committing licensed source to GitHub.
