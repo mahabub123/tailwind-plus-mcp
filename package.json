@@ -14,7 +14,8 @@
     "build": "next build",
     "start:web": "npm start",
     "start:stdio": "node src/cli.js serve",
-    "diagnose": "node --env-file-if-exists=.env --env-file-if-exists=.env.local scripts/diagnose.js"
+    "diagnose": "node --env-file-if-exists=.env --env-file-if-exists=.env.local scripts/diagnose.js",
+    "preview:templates": "node scripts/build-oatmeal-preview.js"
   },
   "keywords": [],
   "author": "",
@@ -37,5 +38,9 @@
     "tailwindcss": "^4.3.3",
     "yauzl": "3.4.0",
     "zod": "3.25.76"
+  },
+  "devDependencies": {
+    "clsx": "^2.1.1",
+    "esbuild": "^0.28.2"
   }
 }

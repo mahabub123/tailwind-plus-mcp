@@ -20,3 +20,12 @@ test('previews compile Tailwind locally and restrict asset script execution', as
   assert.match(dark.html, /<html class="dark"/);
   assert.notEqual(light.csp, dark.csp);
 });
+test('production preview runtime serves browser JavaScript from the installed package', async () => {
+  const { GET } = await import('../app/api/preview-runtime/route.js');
+  const response = await GET();
+  assert.equal(response.headers.get('content-type'), 'text/javascript');
+  const source = await response.text();
+  assert.match(source, /@tailwindplus\/elements/);
+  assert.ok(source.length > 1000);
+  assert.ok(!source.includes('module.exports'));
+});

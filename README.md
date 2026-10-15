@@ -31,6 +31,21 @@ Elements runtime supplies HTML component interactions. External images may load
 from URLs already present in the component. Source files are never executed on
 the server. Restart the app after replacing library files to refresh its index.
 
+### Complete template gallery
+
+Templates are grouped into complete projects, with page previews and downloads of
+the preserved original ZIPs in `library/.archives/`. JavaScript and TypeScript
+variants are included in the same download; Catalyst demo variants share one kit
+entry. ZIP download routes accept only known template identifiers.
+
+Most full-site previews use the official hosted Tailwind demos and need internet
+access. Oatmeal uses locally generated static pages and original images. After
+importing the Oatmeal archive, run `npm run preview:templates` before starting the
+app, and transfer `library/.previews/` with the private library when deploying.
+This explicit build renders the installed Oatmeal demo; it does not install or
+run scripts from template packages. Generated previews and licensed assets stay
+outside Git.
+
 ## Requirements and quick start
 
 Node.js 22 or newer, npm, and internet access for the initial dependency install. No Tailwind credentials required. The local stdio CLI needs no build step; Next.js hosting requires `npm run build`.
