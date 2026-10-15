@@ -3,19 +3,24 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import os from 'node:os';
-import { groupTemplates } from '../src/templates-data.js';
+import { groupTemplates, groupUiKits } from '../src/templates-data.js';
 import { openTemplateArchive } from '../src/templates.js';
 test('template gallery groups project files and combines Catalyst variants', () => {
-  const grouped = groupTemplates([
+  const assets = [
     { kind:'template', template:'spotlight', path:'templates/spotlight/spotlight-js/src/app/page.jsx' },
     { kind:'template', template:'spotlight', path:'templates/spotlight/spotlight-ts/src/app/page.tsx' },
     { kind:'template', template:'catalyst-demo-javascript', path:'templates/catalyst-demo-javascript/src/app.jsx' },
     { kind:'template', template:'catalyst-demo-typescript', path:'templates/catalyst-demo-typescript/src/app.tsx' },
-  ]);
-  assert.equal(grouped.length,2);
+  ];
+  const grouped = groupTemplates(assets);
+  const kits = groupUiKits(assets);
+  assert.equal(grouped.length,1);
+  assert.equal(kits.length,1);
+  assert.ok(grouped.every(t => t.id !== 'catalyst'));
+  assert.equal(kits[0].id, 'catalyst');
   assert.equal(grouped.find(t=>t.id==='spotlight').files,2);
   assert.deepEqual(grouped.find(t=>t.id==='spotlight').variants,['JavaScript','TypeScript']);
-  assert.equal(grouped.find(t=>t.id==='catalyst').archive,'catalyst-ui-kit.zip');
+  assert.equal(kits[0].archive,'catalyst-ui-kit.zip');
 });
 test('downloads open only allowlisted original ZIPs and reject symbolic links', async () => {
   const root = await fs.mkdtemp(path.join(os.tmpdir(),'template-download-'));

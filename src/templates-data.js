@@ -14,11 +14,13 @@ const definitions = [
   ['transmit', 'Transmit', 'Podcast website template', 'A dedicated website for your show, episodes, and listeners.', 'transmit', ['/']],
   ['catalyst', 'Catalyst', 'Application UI kit demo', 'A complete application demo built with the Catalyst component system.', 'catalyst-demo', ['/', '/orders', '/events']],
 ];
-export const templateDefinitions = definitions.map(([id, name, category, description, demo, pages]) => ({ id, name, category, description, archive: id === 'catalyst' ? 'catalyst-ui-kit.zip' : `${id}.zip`, demo: demo ? `https://${demo}.tailwindui.com` : null, pages }));
+export const templateDefinitions = definitions.map(([id, name, category, description, demo, pages]) => ({ id, name, category, description, collection: id === 'catalyst' ? 'ui-kits' : 'templates', archive: id === 'catalyst' ? 'catalyst-ui-kit.zip' : `${id}.zip`, demo: demo ? `https://${demo}.tailwindui.com` : null, pages }));
 export function templateDefinition(id) { return templateDefinitions.find(t => t.id === id); }
-export function groupTemplates(assets) {
-  return templateDefinitions.map(t => {
-    const files = assets.filter(a => a.kind === 'template' && (t.id === 'catalyst' ? a.template?.startsWith('catalyst-demo-') : a.template === t.id));
+export function groupTemplates(assets, collection = 'templates') {
+  return templateDefinitions.filter(t => t.collection === collection).map(t => {
+    const files = assets.filter(a => t.id === 'catalyst' ? a.template?.startsWith('catalyst-demo-') || a.path.startsWith('components/catalyst/') : a.kind === 'template' && a.template === t.id);
     return { ...t, files: files.length, variants: [...new Set(files.map(a => a.path.includes('-ts/') || a.path.includes('typescript/') || t.id === 'oatmeal-olive-instrument' ? 'TypeScript' : 'JavaScript'))] };
   }).filter(t => t.files > 0);
 }
+
+export function groupUiKits(assets) { return groupTemplates(assets, 'ui-kits'); }
