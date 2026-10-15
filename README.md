@@ -16,6 +16,21 @@ Use `/` for platform health checks; `/mcp` allows anonymous read access.
 `npm run start:web` is an alias for `npm start`. Local stdio remains available
 through `npm run start:stdio` or the CLI's `serve` command.
 
+## Component browser
+
+The homepage browses the installed library with inline Preview and Code panels.
+Each example supports framework source selection, complete-source copying,
+light/dark/system themes, and desktop/tablet/mobile preview widths. Tailwind CSS
+is compiled locally. React and Vue examples render their matching HTML variant;
+the code tab always shows the selected framework's original source. Package and
+template files without an HTML counterpart provide source browsing only.
+
+Previews run in opaque-origin sandboxed iframes with a restrictive content
+security policy. Imported scripts are removed; the official Tailwind Plus
+Elements runtime supplies HTML component interactions. External images may load
+from URLs already present in the component. Source files are never executed on
+the server. Restart the app after replacing library files to refresh its index.
+
 ## Requirements and quick start
 
 Node.js 22 or newer, npm, and internet access for the initial dependency install. No Tailwind credentials required. The local stdio CLI needs no build step; Next.js hosting requires `npm run build`.

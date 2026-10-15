@@ -1,3 +1,12 @@
-export default function Home() {
-  return <main><h1>Tailwind Plus MCP</h1><p>Your component library MCP service.</p><p>Connect an MCP client to <code>/mcp</code> without signing in.</p><p>This service reads the configured asset folder. The MCP endpoint provides public read access to the library.</p></main>;
+import { openLibrary } from '../src/library-config.js';
+import LibraryBrowser from './library-browser.js';
+export const dynamic = 'force-dynamic';
+export default async function Home() {
+  try {
+    const library = await openLibrary();
+    const assets = library.entries.map(({ id, path, name, kind, template, category, format, bytes }) => ({ id, path, name, kind, template, category, format, bytes }));
+    return <LibraryBrowser assets={assets} />;
+  } catch {
+    return <LibraryBrowser assets={[]} unavailable />;
+  }
 }
