@@ -1,0 +1,9 @@
+{
+  "mcpServers": {
+    "tailwind-plus": {
+      "type": "stdio",
+      "command": "node",
+      "args": ["/absolute/tailwind-plus-mcp/src/cli.js", "serve", "--root", "/absolute/private-library"]
+    }
+  }
+}

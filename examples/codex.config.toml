@@ -1,0 +1,3 @@
+[mcp_servers.tailwind_plus]
+command = "node"
+args = ["/absolute/tailwind-plus-mcp/src/cli.js", "serve", "--root", "/absolute/private-library"]

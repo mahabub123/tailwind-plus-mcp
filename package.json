@@ -1,0 +1,30 @@
+{
+  "name": "tailwind-plus-mcp",
+  "version": "1.0.0",
+  "description": "Read-only local MCP access to user-supplied licensed Tailwind Plus assets",
+  "directories": {
+    "example": "examples",
+    "test": "test"
+  },
+  "scripts": {
+    "start": "node src/cli.js serve",
+    "test": "node --test",
+    "demo": "node src/cli.js serve --root examples/assets"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "type": "module",
+  "private": true,
+  "engines": {
+    "node": ">=22"
+  },
+  "bin": {
+    "tailwind-plus-local": "src/cli.js"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "1.32.1",
+    "yauzl": "3.4.0",
+    "zod": "3.25.76"
+  }
+}
