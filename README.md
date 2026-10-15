@@ -4,6 +4,13 @@ A runnable JavaScript/Node.js **stdio MCP server** for Claude Code and Codex. It
 
 **You supply the licensed assets.** Download or copy source through your own Tailwind Plus account as your license permits. This project contains only tiny original demo files, not Tailwind Plus components. The MIT license covers this connector, not your imported assets. Keep your library private; check your license and your AI provider's data handling before sending source through a client.
 
+## Next.js without Docker
+
+Run `npm ci`, `npm run build`, then `npm run start:web` to serve the Next.js app on
+127.0.0.1:3001. Configure `TAILWIND_PLUS_ROOT`, `MCP_TOKEN`, and `MCP_PUBLIC_URL`
+in the process environment. See [DEPLOY.md](DEPLOY.md#nextjs-without-docker) for HTTPS
+and VPS deployment. The `/mcp` endpoint requires bearer authentication.
+
 ## Remote hosting
 
 For an authenticated HTTPS endpoint, use the new `serve-http` command and follow

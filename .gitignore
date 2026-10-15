@@ -2,3 +2,6 @@ node_modules/
 library/
 .env*
 *.zip
+
+.next/
+out/

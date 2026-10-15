@@ -92,3 +92,42 @@ proxy instead of starting this Caddy service.
 
 This flow deploys on demand; a GitHub push alone does not configure automatic
 redeployment. Rebuild/redeploy after changing source.
+
+## Next.js without Docker
+
+Node.js 22+ is required. Clone the source from GitHub onto the VPS, run `npm ci`,
+then `npm run build`. Set these server-only environment variables before starting:
+
+```sh
+export TAILWIND_PLUS_ROOT=/opt/tailwind-library
+export MCP_PUBLIC_URL=https://mcp.example.com
+export MCP_TOKEN=YOUR_RANDOM_TOKEN_AT_LEAST_32_CHARACTERS
+npm run start:web
+```
+
+Store the real token in a private environment file or service manager, never GitHub.
+For local development, Next.js also reads .env.local. Set MCP_PUBLIC_URL to
+http://localhost:3001 and TAILWIND_PLUS_ROOT to the absolute path of your asset
+folder (or examples/assets for demo data), then use `npm run dev`.
+
+The Next.js server listens on 127.0.0.1:3001. Use a process manager such as systemd
+on the VPS to keep `npm run start:web` running after logout and reboot. Configure
+its working directory to the checked-out repository and supply the environment
+above. Put Caddy or your existing reverse proxy in front of the Node process:
+
+```caddyfile
+mcp.example.com {
+    reverse_proxy 127.0.0.1:3001
+}
+```
+
+Point DNS at the VPS and allow TCP 80/443. Preserve the original Host header.
+The home page explains the endpoint; /mcp requires bearer authentication. Restart
+the Node process after changing library files. Deploy updates with `git pull`,
+`npm ci`, `npm run build`, then restart the service.
+
+Next.js changes the hosting runtime, not authentication compatibility: the endpoint
+still uses a static bearer token, without OAuth discovery or login. Claude Desktop
+can use a local bridge/client; Claude cloud custom connector compatibility is not
+implemented or verified by this Next.js addition. A public URL alone does not add
+OAuth support.
